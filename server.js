@@ -50,13 +50,13 @@ app.get('/api/proxy-image/:mangaId/:coverFileName', async (req, res) => {
         });
 
         // Set the appropriate content type based on the response headers from Mangadex
-        res.json(response.data);
+        res.set('Content-Type', response.headers['content-type']);  // Use the content-type from Mangadex's response
+        res.send(response.data);  // Send the image data directly to the client
     } catch (error) {
         console.error('Error fetching image:', error.message);
         res.status(500).json({ error: 'Failed to fetch image' });
     }
 });
-
 
 // Start the server
 app.listen(PORT, () => {
