@@ -45,15 +45,12 @@ app.get('/api/proxy-image/:mangaId/:coverFileName', async (req, res) => {
         const response = await axios.get(imageUrl, {
             responseType: 'arraybuffer', // Important for handling image data
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36', // Ensure we pass the correct user-agent
+                'User-Agent': 'mangaReader/1.0.0', // Ensure we pass the correct user-agent
             },
         });
 
         // Set the appropriate content type based on the response headers from Mangadex
-        res.set('Content-Type', response.headers['content-type']);
-
-        // Send the image data back to the client
-        res.send(response.data);
+        res.json(response.data);
     } catch (error) {
         console.error('Error fetching image:', error.message);
         res.status(500).json({ error: 'Failed to fetch image' });
