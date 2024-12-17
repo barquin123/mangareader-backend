@@ -40,20 +40,15 @@ app.get('/api/manga/:endpoint', async (req, res) => {
 
 app.get('/api/manga/search', async (req, res) => {
     try {
-        const { endpoint, title, limit = 10, offset = 0 } = req.query;
+        const { title, limit = 10, offset = 0 } = req.query;
 
         // MangaDex API search endpoint
-        const url = `https://api.mangadex.org/manga?title=${title}&limit=${limit}&offset=${offset}`;
+        const url = `https://api.mangadex.org/manga?title=${encodeURIComponent(title)}&limit=${limit}&offset=${offset}`;
 
-        // Build query params for MangaDex API
+        // Fetch the data from the MangaDex API
         const response = await axios.get(url, {
-            params: {
-                title,       // Title query
-                limit,       // Number of results to return
-                offset,      // Pagination offset
-            },
             headers: {
-                'User-Agent': 'mangaReader/1.0.0',
+                'User-Agent': 'mangaReader/1.0.0',  // Custom User-Agent to avoid blocking
             },
         });
 
