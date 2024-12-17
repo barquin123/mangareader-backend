@@ -11,6 +11,11 @@ app.use(cors({
     methods: ['GET', 'POST'],
 }));
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+})
+
 // Proxy endpoint for manga data
 app.get('/api/manga/:endpoint', async (req, res) => {
     try {
@@ -62,3 +67,4 @@ app.get('/api/proxy-image/:mangaId/:coverFileName', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+git 
