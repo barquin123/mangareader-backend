@@ -67,4 +67,3 @@ app.get('/api/proxy-image/:mangaId/:coverFileName', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-git 
