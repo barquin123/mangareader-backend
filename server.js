@@ -41,18 +41,14 @@ app.get('/api/manga/:endpoint', async (req, res) => {
 app.get('/api/manga/search?:title&:limit&:offset', async (req, res) => {
     try {
         const { title, limit = 10, offset = 0 } = req.query;
-
-        // Log the query parameters to debug
-        console.log('Received search query:', { title, limit, offset });
+        const query = req.query;
 
         // Construct the URL for the MangaDex API
         const url = `https://api.mangadex.org/manga?title=${encodeURIComponent(title)}&limit=${limit}&offset=${offset}`;
 
-        // Log the constructed URL
-        console.log('MangaDex API URL:', url);
-
         // Make the request to MangaDex API
         const response = await axios.get(url, {
+            params: query,
             headers: {
                 'User-Agent': 'mangaReader/1.0.0',  // User-Agent header to avoid blocking
             },
