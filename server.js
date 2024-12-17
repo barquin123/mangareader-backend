@@ -43,7 +43,7 @@ app.get('/api/manga/search', async (req, res) => {
         const { endpoint, title, limit = 10, offset = 0 } = req.query;
 
         // MangaDex API search endpoint
-        const url = `https://api.mangadex.org/${endpoint}?title=${title}&limit=${limit}&offset=${offset}`;
+        const url = `https://api.mangadex.org/manga?title=${title}&limit=${limit}&offset=${offset}`;
 
         // Build query params for MangaDex API
         const response = await axios.get(url, {
