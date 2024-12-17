@@ -38,7 +38,7 @@ app.get('/api/manga/:endpoint', async (req, res) => {
     }
 });
 
-app.get('/api/manga/search/:endpoint', async (req, res) => {
+app.get('/api/manga/search/:endpoint?title=:title&limit=:limit&offset=:offset', async (req, res) => {
     try {
         const { endpoint,title, limit = 10, offset = 0 } = req.query;
 
