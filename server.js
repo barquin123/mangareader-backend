@@ -39,26 +39,24 @@ app.get('/api/manga/:endpoint', async (req, res) => {
 });
 
 // Search manga by title
-app.get('/api/manga/search?title=:title&limit=:limit}&offset=:offset', async (req, res) => {
+app.get('/api/manga/search', async (req, res) => {
     try {
-        // Get query parameters from the frontend request
-        const { title, limit, offset} = req.query;
+        // const endpoint = req.params.endpoint;
+        const query = req.query;
 
-        // Construct the URL for MangaDex API
-        const url = `https://api.mangadex.org/manga?title=${encodeURIComponent(title)}&limit=${limit}&offset=${offset}`;
+        const url = `https://api.mangadex.org/manga`;
 
-        // Fetch data from MangaDex API
         const response = await axios.get(url, {
+            params: query,
             headers: {
-                'User-Agent': 'mangaReader/1.0.0',  // Custom User-Agent to avoid blocking
+                'User-Agent': 'mangaReader/1.0.0',  // Proper user-agent to prevent issues
             },
         });
 
-        // Send the MangaDex response data back to the frontend
         res.json(response.data);
     } catch (error) {
-        console.error('Error proxying manga search:', error.message);
-        res.status(500).json({ error: 'Failed to search manga' });
+        console.error('Error in proxy:', error.message);
+        res.status(500).json({ error: error.message });
     }
 });
 
