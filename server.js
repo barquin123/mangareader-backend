@@ -38,7 +38,7 @@ app.get('/api/manga/:endpoint', async (req, res) => {
     }
 });
 
-app.get('/:endpoint/server/:id', async (req, res) => {
+app.get('/api/manga/:endpoint/server/:id', async (req, res) => {
     try {
         const { id, endpoint } = req.params;  // Capture the 'id' parameter from the URL
         const query = req.query;    // Capture any query parameters
