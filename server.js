@@ -38,6 +38,30 @@ app.get('/api/manga/:endpoint', async (req, res) => {
     }
 });
 
+app.get('/:endpoint/server/:id', async (req, res) => {
+    try {
+        const { id, endpoint } = req.params;  // Capture the 'id' parameter from the URL
+        const query = req.query;    // Capture any query parameters
+
+        // Construct the URL for the external API (assuming a similar structure)
+        const url = `https://api.mangadex.org/${endpoint}/server/${id}`;  // Replace with the correct endpoint
+
+        // Fetch the data from the external API
+        const response = await axios.get(url, {
+            params: query,
+            headers: {
+                'User-Agent': 'mangaReader/1.0.0',  // Ensure correct user-agent to avoid issues
+            },
+        });
+
+        // Send the fetched data back to the client
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error in proxy:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 app.get('/api/manga/:endpoint/:id', async (req, res) => {
     try {
         const {endpoint, id} = req.params;
