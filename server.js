@@ -31,13 +31,7 @@ app.get('/api/manga/:endpoint', async (req, res) => {
             },
         });
 
-        // Filter the results to only include manga with the originalLanguage of 'ko' (Korean)
-        const filteredManga = response.data.data.filter((manga) => {
-            return manga.attributes.originalLanguage === 'ko';
-        });
-
-        // Return the filtered list
-        res.json({ data: filteredManga });
+        res.json(response.data);
     } catch (error) {
         console.error('Error in proxy:', error.message);
         res.status(500).json({ error: error.message });
