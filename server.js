@@ -37,13 +37,14 @@ app.get('/api/manga/:endpoint', async (req, res) => {
 app.get('/api/proxy-image/:mangaId/:coverFileName', async (req, res) => {
     try {
         const { mangaId, coverFileName } = req.params;
+        const query = req.query;
 
         // Construct the full image URL
         const imageUrl = `https://uploads.mangadex.org/covers/${mangaId}/${coverFileName}`;
 
         // Fetch the image from Mangadex
         const response = await axios.get(imageUrl, {
-            responseType: 'arraybuffer', // Important for handling image data
+            params: query,
             headers: {
                 'User-Agent': 'mangaReader/1.0.0', // Ensure we pass the correct user-agent
             },
