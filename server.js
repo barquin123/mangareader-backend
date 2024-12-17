@@ -39,10 +39,10 @@ app.get('/api/manga/:endpoint', async (req, res) => {
 });
 
 // Search manga by title
-app.get('/api/manga/search', async (req, res) => {
+app.get('/api/manga/search?title=:title&limit=:limit}&offset=:offset', async (req, res) => {
     try {
         // Get query parameters from the frontend request
-        const { title, limit = 10, offset = 0 } = req.query;
+        const { title, limit, offset} = req.query;
 
         // Construct the URL for MangaDex API
         const url = `https://api.mangadex.org/manga?title=${encodeURIComponent(title)}&limit=${limit}&offset=${offset}`;
