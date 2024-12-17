@@ -38,14 +38,14 @@ app.get('/api/manga/:endpoint', async (req, res) => {
     }
 });
 
-app.get('/api/manga/search/:endpoint', async (req, res) => {
+app.get('/api/manga/search/:endpoint?title=:title&limit=:limit&offset=:offset', async (req, res) => {
     try {
         const { endpoint,title, limit = 10, offset = 0 } = req.query;
 
         // Log the query parameters to debug
         console.log('Received search query:', { title, limit, offset });
 
-        // Construct the URL for the MangaDex API
+        // Construct the URL for the MangaDex APIg
         const url = `https://api.mangadex.org/${endpoint}?title=${encodeURIComponent(title)}&limit=${limit}&offset=${offset}`;
 
         // Log the constructed URL
