@@ -34,40 +34,30 @@ app.get('/api/manga/:endpoint', async (req, res) => {
 });
 
 // Proxy endpoint for cover images
-app.get('/api/manga/cover/:coverId', async (req, res) => {
+app.get('/api/proxy-image/*', async (req, res) => {
     try {
-        const coverId = req.params.coverId;
+        const imageUrl = req.params[0]; // Get the image path from the URL
+        const fullImageUrl = `https://uploads.mangadex.org/covers/${imageUrl}`;
 
-        // Fetch the cover image URL from MangaDex API
-        const url = `https://api.mangadex.org/cover/${coverId}`;
-        const response = await axios.get(url, {
+        // Fetch the image from Mangadex
+        const response = await axios.get(fullImageUrl, {
+            responseType: 'arraybuffer', // Important for handling image data
             headers: {
-                'User-Agent': 'mangaReader/1.0.0',  // Proper user-agent
+                'User-Agent': 'mangaReader/1.0.0', // Ensure we pass the correct user-agent
             },
         });
 
-        const imageUrl = response.data.data.attributes.fileName;
-        const imageUrlWithBase = `https://uploads.mangadex.org/covers/${coverId}/${imageUrl}`;
+        // Set the appropriate content type based on the response headers from Mangadex
+        res.set('Content-Type', response.headers['content-type']);
 
-        // Fetch the actual image file and pipe it to the client
-        axios({
-            method: 'get',
-            url: imageUrlWithBase,
-            responseType: 'stream',  // Ensures the image is streamed back
-        })
-            .then((imageResponse) => {
-                res.setHeader('Content-Type', imageResponse.headers['content-type']);
-                imageResponse.data.pipe(res);  // Pipe the image stream to the response
-            })
-            .catch((error) => {
-                console.error('Error fetching the image:', error.message);
-                res.status(500).json({ error: 'Error fetching the image' });
-            });
+        // Send the image data back to the client
+        res.send(response.data);
     } catch (error) {
-        console.error('Error fetching cover:', error.message);
-        res.status(500).json({ error: error.message });
+        console.error('Error fetching image:', error.message);
+        res.status(500).json({ error: 'Failed to fetch image' });
     }
 });
+
 
 // Start the server
 app.listen(PORT, () => {
