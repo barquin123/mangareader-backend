@@ -38,6 +38,27 @@ app.get('/api/manga/:endpoint', async (req, res) => {
     }
 });
 
+app.get('/api/manga/:endpoint/:id', async (req, res) => {
+    try {
+        const {endpoint, id} = req.params;
+        const query = req.query;
+
+        const url = `https://api.mangadex.org/${endpoint}/${id}`;
+
+        const response = await axios.get(url, {
+            params: query,
+            headers: {
+                'User-Agent': 'mangaReader/1.0.0',  // Proper user-agent to prevent issues
+            },
+        });
+
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error in proxy:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Proxy endpoint for cover images
 app.get('/api/proxy-image/:mangaId/:coverFileName', async (req, res) => {
     try {
