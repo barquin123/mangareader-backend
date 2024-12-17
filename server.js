@@ -39,12 +39,12 @@ app.get('/api/manga/:endpoint', async (req, res) => {
 });
 
 // Search manga by title
-app.get('/api/manga/search/:endpoint', async (req, res) => {
+app.get('/api/manga/search/:endpoint?title=:title', async (req, res) => {
     try {
-        const endpoint = req.params.endpoint;
+        const { endpoint, title } = req.params.endpoint;
         const query = req.query;
 
-        const url = `https://api.mangadex.org/${endpoint}`;
+        const url = `https://api.mangadex.org/${endpoint}?title=${title}`;
 
         const response = await axios.get(url, {
             params: query,
