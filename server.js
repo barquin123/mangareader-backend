@@ -11,11 +11,6 @@ app.use(cors({
     methods: ['GET', 'POST'],
 }));
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    next();
-});
-
 // Proxy endpoint for manga data
 app.get('/api/manga/:endpoint', async (req, res) => {
     try {
@@ -43,15 +38,31 @@ app.get('/api/manga/cover/:coverId', async (req, res) => {
     try {
         const coverId = req.params.coverId;
 
+        // Fetch the cover image URL from MangaDex API
         const url = `https://api.mangadex.org/cover/${coverId}`;
-
         const response = await axios.get(url, {
             headers: {
                 'User-Agent': 'mangaReader/1.0.0',  // Proper user-agent
             },
         });
 
-        res.json(response.data);
+        const imageUrl = response.data.data.attributes.fileName;
+        const imageUrlWithBase = `https://uploads.mangadex.org/covers/${coverId}/${imageUrl}`;
+
+        // Fetch the actual image file and pipe it to the client
+        axios({
+            method: 'get',
+            url: imageUrlWithBase,
+            responseType: 'stream',  // Ensures the image is streamed back
+        })
+            .then((imageResponse) => {
+                res.setHeader('Content-Type', imageResponse.headers['content-type']);
+                imageResponse.data.pipe(res);  // Pipe the image stream to the response
+            })
+            .catch((error) => {
+                console.error('Error fetching the image:', error.message);
+                res.status(500).json({ error: 'Error fetching the image' });
+            });
     } catch (error) {
         console.error('Error fetching cover:', error.message);
         res.status(500).json({ error: error.message });
